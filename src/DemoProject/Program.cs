@@ -10,6 +10,7 @@ namespace DemoProject
         static void Main(string[] args)
         {
             var conf = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
                 .AddMSNetFrameworkConfiguration()

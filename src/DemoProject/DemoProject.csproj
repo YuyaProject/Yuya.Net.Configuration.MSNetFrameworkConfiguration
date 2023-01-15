@@ -17,4 +17,13 @@
     <ProjectReference Include="..\Yuya.Net.Configuration.MSNetFrameworkConfiguration\Yuya.Net.Configuration.MSNetFrameworkConfiguration.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="App.config">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
