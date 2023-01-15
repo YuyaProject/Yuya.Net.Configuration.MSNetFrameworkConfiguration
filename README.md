@@ -1,0 +1,2 @@
+# Yuya.Net.Configuration.MSNetFrameworkConfiguration
+Yuya.Net.Configuration.MSNetFrameworkConfiguration
