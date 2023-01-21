@@ -12,7 +12,9 @@ namespace DemoProject
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
-                .AddMSNetFrameworkConfiguration(c => c.AddAppSettings().AddConnectionStrings())
+                .AddMSNetFrameworkConfiguration(c => c
+                    .AddAppSettings("Demo1", "Demo2")
+                    .AddConnectionStrings(x => x.Key.StartsWith("cs")))
                 .Build();
 
             Console.WriteLine(conf.GetValue<string>("Demo1"));
