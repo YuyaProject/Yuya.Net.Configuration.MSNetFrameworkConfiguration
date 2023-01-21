@@ -5,7 +5,7 @@ namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
 public class ConnectionStringsReaderProvider : IConfigurationReaderProvider
 {
-    public IEnumerable<KeyValuePair<string, string>> GetAll()
+    public virtual IEnumerable<KeyValuePair<string, string>> GetAll()
     {
         foreach (ConnectionStringSettings key in System.Configuration.ConfigurationManager.ConnectionStrings)
         {

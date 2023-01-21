@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 
 namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
@@ -10,15 +11,28 @@ public class MSNetFrameworkConfigurationSource : IConfigurationSource
     public IConfigurationProvider Build(IConfigurationBuilder builder) =>
         new MSNetFrameworkConfigurationProvider(_providers);
 
-    public MSNetFrameworkConfigurationSource AddAppSettings()
+    private MSNetFrameworkConfigurationSource AddProvider(IConfigurationReaderProvider provider)
     {
-        _providers.Add(new AppSettingsReaderProvider());
+        _providers.Add(provider);
         return this;
     }
 
+    public MSNetFrameworkConfigurationSource AddAppSettings()
+        => AddProvider(new AppSettingsReaderProvider());
+
+    public MSNetFrameworkConfigurationSource AddAppSettings(params string[] keys)
+        => AddProvider(new AppSettingsForKeysReaderProvider(keys));
+
+    public MSNetFrameworkConfigurationSource AddAppSettings(Func<KeyValuePair<string, string>, bool> filter)
+        => AddProvider(new AppSettingsForFilterReaderProvider(filter));
+
     public MSNetFrameworkConfigurationSource AddConnectionStrings()
-    {
-        _providers.Add(new ConnectionStringsReaderProvider());
-        return this;
-    }
+        => AddProvider(new ConnectionStringsReaderProvider());
+
+    public MSNetFrameworkConfigurationSource AddConnectionStrings(params string[] keys)
+        => AddProvider(new ConnectionStringsForKeysReaderProvider(keys));
+
+    public MSNetFrameworkConfigurationSource AddConnectionStrings(Func<KeyValuePair<string, string>, bool> filter)
+        => AddProvider(new ConnectionStringsForFilterReaderProvider(filter));
+
 }

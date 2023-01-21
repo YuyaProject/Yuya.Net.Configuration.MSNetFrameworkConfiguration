@@ -4,7 +4,7 @@ namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
 public class AppSettingsReaderProvider : IConfigurationReaderProvider
 {
-    public IEnumerable<KeyValuePair<string, string>> GetAll()
+    public virtual IEnumerable<KeyValuePair<string, string>> GetAll()
     {
         foreach (string key in System.Configuration.ConfigurationManager.AppSettings.Keys)
         {
