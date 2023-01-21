@@ -13,7 +13,7 @@ namespace DemoProject
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
                 .AddMSNetFrameworkConfiguration(c => c
-                    .AddAppSettings("Demo1", "Demo2")
+                    .AddAppSettings("Demo1", "Demo2", "RabbitMQ:Host")
                     .AddAppSettings(x=>x.Key.StartsWith("RabbitMQ"))
                     .AddConnectionStrings(x => x.Key.StartsWith("cs")))
                 .Build();
