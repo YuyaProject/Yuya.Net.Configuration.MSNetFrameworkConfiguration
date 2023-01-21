@@ -1,28 +1,56 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
 public class MSNetFrameworkConfigurationProvider : ConfigurationProvider
 {
+    private readonly List<IConfigurationReaderProvider> _providers;
+
+    public MSNetFrameworkConfigurationProvider(List<IConfigurationReaderProvider> providers)
+    {
+        _providers = providers ?? new();
+    }
 
     public override void Load()
     {
-        var data = System.Configuration.ConfigurationManager.AppSettings.Keys
-            .Cast<string>()
-            .ToDictionary(x => x, x => System.Configuration.ConfigurationManager.AppSettings[x]);
+        Data = new Dictionary<string, string>();
 
-
-        if (System.Configuration.ConfigurationManager.ConnectionStrings.Count > 0)
+        foreach (var provider in _providers)
         {
-            foreach (ConnectionStringSettings key in System.Configuration.ConfigurationManager.ConnectionStrings)
+            foreach (var item in provider.GetAll())
             {
-                data.Add("ConnectionStrings:" + key.Name, key.ConnectionString);
+                Data[item.Key] = item.Value;
             }
         }
+    }
 
-        Data = data;
+}
+
+public interface IConfigurationReaderProvider
+{
+    IEnumerable<KeyValuePair<string, string>> GetAll();
+}
+
+public class AppSettingsReaderProvider : IConfigurationReaderProvider
+{
+    public IEnumerable<KeyValuePair<string, string>> GetAll()
+    {
+        foreach (string key in System.Configuration.ConfigurationManager.AppSettings.Keys)
+        {
+            yield return new(key, System.Configuration.ConfigurationManager.AppSettings[key]);
+        }
+    }
+}
+
+public class ConnectionStringsReaderProvider : IConfigurationReaderProvider
+{
+    public IEnumerable<KeyValuePair<string, string>> GetAll()
+    {
+        foreach (ConnectionStringSettings key in System.Configuration.ConfigurationManager.ConnectionStrings)
+        {
+            yield return new("ConnectionStrings:" + key.Name, key.ConnectionString);
+        }
     }
 }

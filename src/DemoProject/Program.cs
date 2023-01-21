@@ -1,19 +1,18 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Linq;
 using Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
 namespace DemoProject
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var conf = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
-                .AddMSNetFrameworkConfiguration()
+                .AddMSNetFrameworkConfiguration(c => c.AddAppSettings().AddConnectionStrings())
                 .Build();
 
             Console.WriteLine(conf.GetValue<string>("Demo1"));

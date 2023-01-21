@@ -1,16 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
 
 namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
 public static class ConfigurationBuilderExtensions
 {
     public static IConfigurationBuilder AddMSNetFrameworkConfiguration(
-        this IConfigurationBuilder builder)
+        this IConfigurationBuilder builder, Action<MSNetFrameworkConfigurationSource> configurationAction = null)
     {
-        //var tempConfig = builder.Build();
-        //var connectionString =
-        //    tempConfig.GetConnectionString("WidgetConnectionString");
+        var src = new MSNetFrameworkConfigurationSource();
 
-        return builder.Add(new MSNetFrameworkConfigurationSource());
+        configurationAction?.Invoke(src);
+
+        return builder.Add(src);
     }
 }
