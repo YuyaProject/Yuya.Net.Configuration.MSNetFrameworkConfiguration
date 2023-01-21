@@ -2,13 +2,13 @@
 
 namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
-public class AppSettingsReaderProvider : IConfigurationReaderProvider
+public class AppSettingsReaderProvider : ConfigurationReaderProviderBase
 {
-    public virtual IEnumerable<KeyValuePair<string, string>> GetAll()
+    public AppSettingsReaderProvider(IConfigurationManagerService configurationManagerService = null) 
+        : base(configurationManagerService)
     {
-        foreach (string key in System.Configuration.ConfigurationManager.AppSettings.Keys)
-        {
-            yield return new(key, System.Configuration.ConfigurationManager.AppSettings[key]);
-        }
     }
+
+    public override IEnumerable<KeyValuePair<string, string>> GetAll() 
+        => _configurationManagerService.GetAllAppSettings();
 }

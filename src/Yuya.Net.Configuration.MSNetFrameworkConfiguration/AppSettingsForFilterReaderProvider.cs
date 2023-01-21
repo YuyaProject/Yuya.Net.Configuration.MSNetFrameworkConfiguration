@@ -4,20 +4,22 @@ using System.Linq;
 
 namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
-public class AppSettingsForFilterReaderProvider : AppSettingsReaderProvider
+public class AppSettingsForFilterReaderProvider : ConfigurationReaderProviderBase
 {
-    private readonly Func<KeyValuePair<string, string>, bool> _func;
+    protected Func<KeyValuePair<string, string>, bool> _func;
 
-    public AppSettingsForFilterReaderProvider(Func<KeyValuePair<string, string>, bool> keys)
+    public AppSettingsForFilterReaderProvider(
+        Func<KeyValuePair<string, string>, bool> func,
+        IConfigurationManagerService configurationManagerService = null)
+        : base(configurationManagerService)
+        => _func = func;
+
+    protected AppSettingsForFilterReaderProvider(
+        IConfigurationManagerService configurationManagerService = null)
+        : base(configurationManagerService)
     {
-        _func = keys;
     }
 
     public override IEnumerable<KeyValuePair<string, string>> GetAll()
-    {
-        foreach (var key in base.GetAll().Where(_func))
-        {
-            yield return key;
-        }
-    }
+        => _configurationManagerService.GetAllAppSettings().Where(_func);
 }

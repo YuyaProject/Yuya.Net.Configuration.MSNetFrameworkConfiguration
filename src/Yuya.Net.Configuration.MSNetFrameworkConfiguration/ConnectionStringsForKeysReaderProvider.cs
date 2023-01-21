@@ -1,26 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
-public class ConnectionStringsForKeysReaderProvider : ConnectionStringsReaderProvider
+public class ConnectionStringsForKeysReaderProvider : ConnectionStringsForFilterReaderProvider
 {
-
     private readonly string[] _keys;
 
-    public ConnectionStringsForKeysReaderProvider(string[] keys)
+    public ConnectionStringsForKeysReaderProvider(
+        string[] keys,
+        IConfigurationManagerService configurationManagerService = null)
+        : base(configurationManagerService)
     {
+        _func = x => _keys.Contains(x.Key);
         _keys = keys;
-    }
-
-    public override IEnumerable<KeyValuePair<string, string>> GetAll()
-    {
-        foreach (ConnectionStringSettings key in System.Configuration.ConfigurationManager.ConnectionStrings)
-        {
-            if (_keys.Contains(key.Name))
-                yield return new("ConnectionStrings:" + key.Name, key.ConnectionString);
-        }
     }
 }

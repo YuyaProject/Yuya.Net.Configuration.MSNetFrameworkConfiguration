@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.Linq;
 
 namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration;
 
 public class ConnectionStringsForFilterReaderProvider : ConnectionStringsReaderProvider
 {
+    protected Func<KeyValuePair<string, string>, bool> _func;
 
-    private readonly Func<KeyValuePair<string, string>, bool> _func;
+    public ConnectionStringsForFilterReaderProvider(
+        Func<KeyValuePair<string, string>, bool> keys,
+        IConfigurationManagerService configurationManagerService = null)
+        : base(configurationManagerService)
+        => _func = keys;
 
-    public ConnectionStringsForFilterReaderProvider(Func<KeyValuePair<string, string>, bool> keys)
+    protected ConnectionStringsForFilterReaderProvider(
+        IConfigurationManagerService configurationManagerService = null)
+        : base(configurationManagerService)
     {
-        _func = keys;
     }
-
 
     public override IEnumerable<KeyValuePair<string, string>> GetAll()
-    {
-        foreach (ConnectionStringSettings key in System.Configuration.ConfigurationManager.ConnectionStrings)
-        {
-            if (_func(new(key.Name, key.ConnectionString)))
-                yield return new("ConnectionStrings:" + key.Name, key.ConnectionString);
-        }
-    }
+        => _configurationManagerService.GetAllConnectionStrings()
+            .Where(_func)
+            .Select(ChangeKey);
 }
