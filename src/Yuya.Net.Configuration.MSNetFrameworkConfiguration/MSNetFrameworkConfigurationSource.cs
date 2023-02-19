@@ -35,4 +35,9 @@ public class MSNetFrameworkConfigurationSource : IConfigurationSource
     public MSNetFrameworkConfigurationSource AddConnectionStrings(Func<KeyValuePair<string, string>, bool> filter)
         => AddProvider(new ConnectionStringsForFilterReaderProvider(filter));
 
+    public MSNetFrameworkConfigurationSource AddSection(string sectionName,
+                                                        Func<KeyValuePair<string, string>, bool> filter = null,
+                                                        string sectionNamePrefix = null)
+        => AddProvider(new SectionForFilterReaderProvider(sectionName, filter, sectionNamePrefix));
+
 }

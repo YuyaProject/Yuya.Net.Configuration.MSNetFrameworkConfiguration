@@ -6,5 +6,6 @@ namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration
     {
         IEnumerable<KeyValuePair<string, string>> GetAllAppSettings();
         IEnumerable<KeyValuePair<string, string>> GetAllConnectionStrings();
+        IEnumerable<KeyValuePair<string, string>> GetSectionSettings(string sectionName);
     }
 }
