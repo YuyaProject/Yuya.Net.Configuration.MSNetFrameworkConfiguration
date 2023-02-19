@@ -8,6 +8,8 @@ namespace DemoProject
     {
         private static void Main(string[] args)
         {
+            var newConfig = System.Configuration.ConfigurationManager.GetSection("Demo");
+
             var conf = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
