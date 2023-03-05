@@ -1,11 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Reflection;
+using System.Linq;
 
 namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration
 {
     internal class ConfigurationManagerService : IConfigurationManagerService
     {
+        private static readonly string[] inheritedPropertyNames = new[] {
+            "SectionInformation",
+            "LockAttributes",
+            "LockAllAttributesExcept",
+            "LockElements",
+            "LockAllElementsExcept",
+            "LockItem",
+            "ElementInformation",
+            "CurrentConfiguration"
+            };
+
         public IEnumerable<KeyValuePair<string, string>> GetAllAppSettings()
         {
             foreach (string key in ConfigurationManager.AppSettings.Keys)
@@ -22,17 +33,22 @@ namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration
             }
         }
 
-        public IEnumerable<KeyValuePair<string, string>> GetSectionSettings(string sectionName)
+        public IEnumerable<KeyValuePair<string, string>> GetSectionSettings(string sectionName, bool addSectionInheritProperties = false)
         {
             var section = ConfigurationManager.GetSection(sectionName);
             var type = section.GetType();
             var properties = type.GetProperties();
+
+            if (!addSectionInheritProperties)
+            {
+                properties = properties.Where(x => !inheritedPropertyNames.Contains(x.Name)).ToArray();
+            }
+
             foreach (var property in properties)
             {
                 var value = property.GetValue(section);
                 yield return new(property.Name, value?.ToString());
             }
-
         }
     }
 }

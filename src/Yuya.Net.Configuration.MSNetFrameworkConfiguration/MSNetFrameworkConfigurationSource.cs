@@ -37,7 +37,8 @@ public class MSNetFrameworkConfigurationSource : IConfigurationSource
 
     public MSNetFrameworkConfigurationSource AddSection(string sectionName,
                                                         Func<KeyValuePair<string, string>, bool> filter = null,
-                                                        string sectionNamePrefix = null)
-        => AddProvider(new SectionForFilterReaderProvider(sectionName, filter, sectionNamePrefix));
+                                                        string sectionNamePrefix = null,
+                                                        bool addSectionInheritProperties = false)
+        => AddProvider(new SectionForFilterReaderProvider(sectionName, filter, sectionNamePrefix, addSectionInheritProperties));
 
 }

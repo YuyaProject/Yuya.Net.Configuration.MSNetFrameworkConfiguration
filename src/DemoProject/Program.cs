@@ -18,7 +18,7 @@ namespace DemoProject
                     .AddAppSettings("Demo1", "Demo2", "RabbitMQ:Host")
                     .AddAppSettings(x=>x.Key.StartsWith("RabbitMQ"))
                     .AddConnectionStrings(x => x.Key.StartsWith("cs"))
-                    .AddSection("Demo", sectionNamePrefix: "demo")
+                    .AddSection("Demo", sectionNamePrefix: "demo", addSectionInheritProperties: true)
                     )
                 .Build();
 
