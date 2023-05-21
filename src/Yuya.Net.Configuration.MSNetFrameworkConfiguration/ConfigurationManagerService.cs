@@ -47,6 +47,20 @@ namespace Yuya.Net.Configuration.MSNetFrameworkConfiguration
             foreach (var property in properties)
             {
                 var value = property.GetValue(section);
+                if (value != null)
+                {
+                    var valueType = value.GetType();
+                    if (!valueType.IsValueType && !valueType.IsEnum && value is not string)
+                    {
+                        var valueProperties = valueType.GetProperties();
+
+                        foreach (var valueProperty in valueProperties)
+                        {
+                            var valueValue = valueProperty.GetValue(value);
+                            yield return new(property.Name + ":" + valueProperty.Name, valueValue?.ToString());
+                        }
+                    }
+                }
                 yield return new(property.Name, value?.ToString());
             }
         }
